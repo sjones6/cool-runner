@@ -1,12 +1,22 @@
 # Cool Runner
 
-An intentionally minimal, slightly opinionated test runner for NodeJS
+An intentionally minimal, slightly opinionated test runner for NodeJS (does not work in the browser!)
 
-# Installation
+![Cool Runnings Gif](https://media.giphy.com/media/Q9jxM90yQRv2M/giphy.gif)
+
+## Installation
+
+Local installation:
 
 `yarn add cool-runner` or `npm install cool-runner --save`
 
-# Writing Tests
+You may also install globally:
+
+`yarn add -g cool-runner` or `npm install -g cool-runner`
+
+## Writing Tests
+
+All tests must extend from the `TestCase` class.
 
 ```javascript
 const {TestCase} = require('cool-runner');
@@ -70,9 +80,9 @@ class MyTestCase extends TestCase {
 module.exports = MyTestCase;
 ```
 
-# Running Tests
+## Running Tests
 
-CoolRunner exposes two commands, which recursively search your test 
+CoolRunner exposes two commands, which recursively search your test directory and run all of the valid test cases.
 
 * **Basic Test Running (`test`)**
 
@@ -103,3 +113,25 @@ If you interleave source code and tests, run the following to recursively search
 `cool-runner test --testDir=src`
 
 (Note, that there is a slight performance benefit to keeping them in separate directories. This benefit could be more important as the size of the tests and source directory grow.)
+
+
+## Why CoolRunner?
+
+There are lots of great test runners available in the JavaScript ecosystem (which I use and enjoy!). However, CoolRunner is designed with a few things in mind:
+
+* Speed: Tests should run in <1s, preferrably faster.
+* Ease of use: Straightfoward API. Sensible defaults.
+* Easy to wire-up to debuggers for interactive testing + debugging.
+* Avoid any global state.
+
+## Contributing
+
+Contributions welcome on [Gitbub](https://github.com/sjones6/cool-runner).
+
+## Issues
+
+Submit issues on [Github](https://github.com/sjones6/cool-runner/issues).
+
+## Authors
+
+* [Spencer Jones (sjones6)](https://github.com/sjones6)
