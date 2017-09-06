@@ -1,0 +1,33 @@
+{
+  "name": "cool-runner",
+  "version": "0.0.1",
+  "description": "An intentional-minimal, slightly-opinionated test runner for NodeJS.",
+  "main": "index.js",
+  "scripts": {
+    "test": "./bin/test.js",
+    "watch:test": "./bin/watch.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sjones6/cool-runner.git"
+  },
+  "keywords": [
+    "node",
+    "TDD",
+    "test-runner"
+  ],
+  "bin": {
+    "watch": "bin/watch",
+    "test": "bin/test"
+  },
+  "author": "sjones6",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sjones6/cool-runner/issues"
+  },
+  "homepage": "https://github.com/sjones6/cool-runner#readme",
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "minimist": "^1.2.0"
+  }
+}
