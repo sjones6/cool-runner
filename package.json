@@ -17,8 +17,7 @@
     "test-runner"
   ],
   "bin": {
-    "watch": "bin/watch",
-    "test": "bin/test"
+    "cool-runner": "./bin/cli.js"
   },
   "author": "sjones6",
   "license": "MIT",
