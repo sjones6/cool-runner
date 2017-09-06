@@ -84,14 +84,12 @@ module.exports = MyTestCase;
 
 CoolRunner exposes two commands, which recursively search your test directory and run all of the valid test cases.
 
-**`cool-runner test`**
+### **`cool-runner test`**
 
-**Options**:
 * `--testDir=tests`: Specify the relative path to some other directory besides `tests` where tests are stored
 
-**`cool-runner watch`**
+### **`cool-runner watch`**
 
-**Options**:
 * `--testDir=tests`: Specify the relative path to some other directory besides `tests` where tests are stored
 * `--srcDir=src`: Specify the relative path to some other directory besides `src` where source code is stored
 
