@@ -2,7 +2,7 @@
 
 An intentionally minimal, slightly opinionated test runner for NodeJS (does not work in the browser!)
 
-![Cool Runnings Gif](https://media.giphy.com/media/Q9jxM90yQRv2M/giphy.gif)
+![Cool Runnings Gif](https://media.giphy.com/media/11oPKCg5x7J7nG/giphy.gif)
 
 ## Installation
 
