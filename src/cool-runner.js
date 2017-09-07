@@ -55,6 +55,13 @@ class CoolRunner {
         this._tracker.log();
         this._tracker.reset();
         this._finished(!this._tracker.anyErr());
+        this._clearCacheModules();
+    }
+
+    _clearCacheModules() {
+        Object.keys(require.cache).forEach(cached => {
+            delete require.cache[cached];
+        });
     }
 
     _runSuite() {
