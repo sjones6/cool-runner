@@ -48,7 +48,7 @@ class ErrTracker {
         if (err instanceof AssertionError) {
             return this._generateAssertionErrorMessage(err);
         } else if (err instanceof Error) {
-            return err.message;
+            return "Uncaught error: " + err.message + "\n\n" + err.stack;
         } else {
             return (typeof err.toString === "function") ? err.toString() : err;
         }
