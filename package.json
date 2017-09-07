@@ -4,8 +4,8 @@
   "description": "An intentional-minimal, slightly-opinionated test runner for NodeJS.",
   "main": "index.js",
   "scripts": {
-    "test": "./bin/test.js",
-    "watch:test": "./bin/watch.js"
+    "test": "node ./bin/test.js",
+    "watch:test": "node ./bin/watch.js"
   },
   "repository": {
     "type": "git",

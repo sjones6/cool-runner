@@ -52,10 +52,19 @@ class CoolRunner {
 
     _suiteFinished() {
         this.tests = [];
+
+        // Record success
+        let success = !this._tracker.anyErr();
+        
+        // Write out logs
         this._tracker.log();
+
+        // Reset state
         this._tracker.reset();
-        this._finished(!this._tracker.anyErr());
         this._clearCacheModules();
+
+        // Call finished handler
+        this._finished.call(null, success);
     }
 
     _clearCacheModules() {
