@@ -145,7 +145,17 @@ class CoolRunner {
             if (fs.lstatSync(absPath).isDirectory()) {
                 return this._addTest(absPath);
             } else if (file.substr(-3) === ".js") {
-                this.tests.push(uncacheRequire(absPath));
+                try {
+                    let testCase = uncacheRequire(absPath);
+                    this.tests.push(testCase);
+                } catch (err) {
+                    this._tracker.add({
+                        case: absPath,
+                        uncaught: true,
+                        testCase: true,
+                        err
+                    });
+                }
             }
         });
     }
