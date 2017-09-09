@@ -158,6 +158,7 @@ class CoolRunner {
     }
 
     _processUncaught(err) {
+        process.stdout.write(red("F"));
         this._tracker.add({
             case: `${this._currSuite}: ${this._currTest}`,
             uncaught: true,
