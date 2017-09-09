@@ -24,6 +24,10 @@ class CoolRunner {
         this._currentSuite = [];
         this._tracker = new ErrTracker();
         this._setOptions(opt);
+
+        process.on("uncaughtException", err => {
+            this._processUncaught(err);
+        });
     }
 
     /**
@@ -122,8 +126,10 @@ class CoolRunner {
                 suiteDone();
             } else {
                 setImmediate(() => {
+                    this._currSuite = suite.constructor.name;
                     try {
                         suite.beforeEach();
+                        this._currTest = testNames[i];
                         suite[testNames[i]].call(suite, () => {
                             suite.afterEach();
                             this._tracker.increment();
@@ -139,11 +145,7 @@ class CoolRunner {
                                 err
                             });
                         } else {
-                            this._tracker.add({
-                                case: `${suite.constructor.name}: ${testNames[i]}`,
-                                uncaught: true,
-                                err
-                            });
+                            this._processUncaught(err);
                         }
                         i++;
                         runTest(i);
@@ -153,6 +155,14 @@ class CoolRunner {
         }
         suite.beforeAll();
         runTest(0);
+    }
+
+    _processUncaught(err) {
+        this._tracker.add({
+            case: `${this._currSuite}: ${this._currTest}`,
+            uncaught: true,
+            err
+        });
     }
 
     _addTest(dir) {
