@@ -1,6 +1,6 @@
 {
   "name": "cool-runner",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "An intentional-minimal, slightly-opinionated test runner for NodeJS.",
   "main": "index.js",
   "scripts": {
