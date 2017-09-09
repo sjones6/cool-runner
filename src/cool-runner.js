@@ -107,14 +107,19 @@ class CoolRunner {
             return next();
         }
 
-        let suite = new Test();
-        let toRun = Object.getOwnPropertyNames(Test.prototype).filter(key => {
-            return /test$/i.test(key) || /^test/i.test(key);
-        });
-        if (toRun && toRun.length) {
-            this._tracker.suite(Test.name);
-            this._processTests(suite, toRun, next);
-        } else {
+        try {
+            let suite = new Test();
+            let toRun = Object.getOwnPropertyNames(Test.prototype).filter(key => {
+                return /test$/i.test(key) || /^test/i.test(key);
+            });
+            if (toRun && toRun.length) {
+                this._tracker.suite(Test.name);
+                this._processTests(suite, toRun, next);
+            } else {
+                next();
+            }
+        } catch (err) {
+            console.log("Error received attempting to create test case. Error bypassed.", err);
             next();
         }
     }
