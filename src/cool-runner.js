@@ -173,7 +173,8 @@ class CoolRunner {
                                             suite[testNames[i]].bind(suite),
                                             err => {
                                                 if (err) {
-                                                    return processSuiteErr(err);
+                                                    processSuiteErr(err);
+                                                    return runNext();
                                                 }
                                                 
                                                 this._promise(
