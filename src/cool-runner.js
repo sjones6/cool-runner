@@ -181,7 +181,7 @@ class CoolRunner {
                                                     suite.afterEach.bind(suite),
                                                     err => {
                                                         if (err) {
-                                                            return processSuiteErr(err);
+                                                            processSuiteErr(err);
                                                             return runNext();
                                                         }
                                                         
