@@ -24,6 +24,14 @@ const assert = require('assert');
 
 class MyTestCase extends TestCase {
 
+    constructor() {
+        super();
+
+        // How long to wait for async operations
+        // Default is 2000
+        this.setTimeout(2000);
+    }
+
     /*
      * Tests should start or end with the word "test".
      * camelCase, PascalCase, snake_case, etc. are all fine
@@ -35,11 +43,25 @@ class MyTestCase extends TestCase {
 
     /**
      * `done` must be called for both synchronous and async tests
+     * unless using promises ...
      */
     some_async_functionality_test(done) {
         runSomeAsyncLogic.then(response => {
             assert.deepStricEqual(response, mock);
             done();
+        });
+    }
+
+    /**
+     * Alternatively, return a promise that resolves after 
+     * everything is finished
+     */
+    some_async_functionality_test_with_promise() {
+        return new Promise((resolve, reject) => {
+            runSomeAsyncLogic.then(response => {
+                assert.deepStricEqual(response, mock);
+                resolve();
+            });
         });
     }
 
@@ -60,16 +82,26 @@ class MyTestCase extends TestCase {
 
     /* other helpful methods to know about */
 
-    beforeEach() {
+    beforeEach(done) {
         // do something before every test is run
+        done();
     }
 
+    /**
+     * Same as above, you can call the callback when finished
+     * or return a promise that resolves.
+     */
     beforeAll() {
         // called once before the entire suite is run.
+        return new Promise((resolve, reject) => {
+            // do something important
+            resolve();
+        });
     }
 
-    afterEach() {
+    afterEach(done) {
         // do some cleanup after each test
+        done();
     }
 
     afterAll() {

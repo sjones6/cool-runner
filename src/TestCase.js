@@ -1,18 +1,26 @@
 class TestCase {
-    beforeAll() {
-
+    constructor() {
+        this.setTimeout(2000);
     }
 
-    beforeEach() {
-        
+    setTimeout(timeout) {
+        this.timeout = timeout;
     }
 
-    afterAll() {
-
+    beforeAll(done) {
+        done();
     }
 
-    afterEach() {
+    beforeEach(done) {
+        done();
+    }
 
+    afterAll(done) {
+        done();
+    }
+
+    afterEach(done) {
+        done();
     }
 }
 

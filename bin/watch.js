@@ -9,6 +9,10 @@ const cwd = process.cwd();
 let argv = parseArgs(process.argv);
 let runner = new CoolRunner();
 
+process.on("uncaughtException", err => {
+    runner.processUncaught(err);
+});
+
 // Watch src/ dir by default
 let absSrcPath = join(cwd, (argv.srcDir || "src"));
 fs.watch(absSrcPath, {recursive: true}, runner.run.bind(runner));

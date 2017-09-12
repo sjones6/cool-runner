@@ -24,10 +24,6 @@ class CoolRunner {
         this._currentSuite = [];
         this._tracker = new ErrTracker();
         this._setOptions(opt);
-
-        process.on("uncaughtException", err => {
-            this._processUncaught(err);
-        });
     }
 
     /**
@@ -125,47 +121,99 @@ class CoolRunner {
     }
 
     _processTests(suite, testNames, suiteDone) {
+        this._currSuite = suite.constructor.name;
+
         let runTest = i => {
+
+            let runNext = () => {
+                i++;
+                runTest(i);
+            };
+
+            let processSuiteErr = err => {
+                if (err instanceof AssertionError) {
+                    process.stdout.write(red("F"));
+                    this._tracker.add({
+                        case: `${suite.constructor.name}: ${testNames[i]}`,
+                        err
+                    });
+                } else {
+                    this.processUncaught(err);
+                }
+            };
+
             if (!testNames[i]) {
-                suite.afterAll();
-                suiteDone();
+                this._promise(suite.afterAll.bind(suite), err => {
+                    if (err) {
+                        processSuiteErr(err);
+                    }
+                    suiteDone();
+                }, suite.timeout);
             } else {
                 setImmediate(() => {
-                    this._currSuite = suite.constructor.name;
                     try {
-                        suite.beforeEach();
-                        this._currTest = testNames[i];
-                        suite[testNames[i]].call(suite, () => {
-                            suite.afterEach();
-                            this._tracker.increment();
-                            process.stdout.write(cyan("."));
-                            i++;
-                            runTest(i);
-                        });
+                        this._promise(
+                            suite.beforeAll.bind(suite),
+                            err => {
+                                if (err) {
+                                    processSuiteErr(err);
+                                    return suiteDone();
+                                }
+
+                                this._promise(
+                                    suite.beforeEach.bind(suite),
+                                    err => {
+                                        if (err) {
+                                            processSuiteErr(err);
+                                            return suiteDone();
+                                        }
+
+                                        this._currTest = testNames[i];
+                                        this._promise(
+                                            suite[testNames[i]].bind(suite),
+                                            err => {
+                                                if (err) {
+                                                    return processSuiteErr(err);
+                                                }
+                                                
+                                                this._promise(
+                                                    suite.afterEach.bind(suite),
+                                                    err => {
+                                                        if (err) {
+                                                            return processSuiteErr(err);
+                                                            return runNext();
+                                                        }
+                                                        
+                                                        this._tracker.increment();
+                                                        process.stdout.write(cyan("."));
+                                                        runNext();
+                                                    },
+                                                    suite.timeout
+                                                );
+                                            },
+                                            suite.timeout
+                                        );
+                                    },
+                                    suite.timeout
+                                );
+                            },
+                            suite.timeout
+                        );
                     } catch (err) {
-                        if (err instanceof AssertionError) {
-                            process.stdout.write(red("F"));
-                            this._tracker.add({
-                                case: `${suite.constructor.name}: ${testNames[i]}`,
-                                err
-                            });
-                        } else {
-                            this._processUncaught(err);
-                        }
-                        i++;
-                        runTest(i);
+                        processSuiteErr(err);
                     }
                 });
             }
         }
-        suite.beforeAll();
+
+        // Kick it off
         runTest(0);
     }
 
-    _processUncaught(err) {
+    processUncaught(err) {
         process.stdout.write(red("F"));
         this._tracker.add({
-            case: `${this._currSuite}: ${this._currTest}`,
+            case: `${this._currSuite || "Uncaught Error"}: ${this._currTest || "unkown test case"}`,
             uncaught: true,
             err
         });
@@ -190,6 +238,29 @@ class CoolRunner {
                 }
             }
         });
+    }
+
+    _promise(cb, next, wait) {
+        let finished = false;
+        let timeout = setTimeout(() => {
+            done(new Error("timed out waiting for response"))
+        }, wait);
+        let done = (err, val) => {
+            if (!finished) {
+                finished = true;
+                clearTimeout(timeout);
+                next(err, val);
+            }
+        };
+        try {
+            let res = cb.call(null, done);
+            if (res instanceof Promise) {
+                res.then(val => done(null, val))
+                    .catch(done);
+            }
+        } catch (err) {
+            done(err);
+        }
     }
 }
 
